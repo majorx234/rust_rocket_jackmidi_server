@@ -17,15 +17,21 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
-// Basic Get Request
-#[get("/")]
+// Basic static Get Request
+#[get("/test")]
 fn hello_world() -> &'static str {
     "Hello world!"
+}
+
+// dynamic get equest with variable
+#[get("/name/<name>")]
+fn hello_name(name: String) -> String {
+    format!("Hello {}!", name)
 }
 
 // async mainfunction
 #[launch]
 fn rocket() -> _ {
     // routes macro generates routes of webrequests
-    rocket::build().mount("/api", routes![hello_world])
+    rocket::build().mount("/api", routes![hello_world, hello_name])
 }
