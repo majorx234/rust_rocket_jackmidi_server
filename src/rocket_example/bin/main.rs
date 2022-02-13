@@ -29,9 +29,34 @@ fn hello_name(name: String) -> String {
     format!("Hello {}!", name)
 }
 
+#[get("/search?<name>&<salutation>")]
+fn query_name(name: String, salutation: Option<String>) -> String {
+    let user: Vec<String> = vec![
+        "Joe".to_string(),
+        "Donald".to_string(),
+        "Hillary".to_string(),
+        "Bill".to_string(),
+        "Barack".to_string(),
+    ];
+    print!("inside{}", name);
+    let index: Option<usize> = match user.binary_search(&name) {
+        Ok(index) => Some(index),
+        Err(_) => None,
+    };
+    let index: i32 = match index {
+        Some(index) => index as i32,
+        None => -1,
+    };
+
+    match salutation {
+        Some(s) => format!("{} {} is user index: {}", s, name, index),
+        None => format!("Hello {} with index {}", name, index),
+    }
+}
+
 // async mainfunction
 #[launch]
 fn rocket() -> _ {
     // routes macro generates routes of webrequests
-    rocket::build().mount("/api", routes![hello_world, hello_name])
+    rocket::build().mount("/api", routes![hello_world, hello_name, query_name,])
 }
