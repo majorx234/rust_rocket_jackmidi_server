@@ -31,19 +31,22 @@ fn hello_name(name: String) -> String {
 
 #[get("/search?<name>&<salutation>")]
 fn query_name(name: String, salutation: Option<String>) -> String {
-    let user: Vec<String> = vec![
+    let mut user: Vec<String> = vec![
         "Joe".to_string(),
         "Donald".to_string(),
         "Hillary".to_string(),
         "Bill".to_string(),
         "Barack".to_string(),
     ];
-    print!("inside{}", name);
-    let index: Option<usize> = match user.binary_search(&name) {
+
+    // binsearch needs sorted array
+    user.sort_unstable();
+    let index2: Option<usize> = match user.binary_search(&name) {
         Ok(index) => Some(index),
         Err(_) => None,
     };
-    let index: i32 = match index {
+
+    let index: i32 = match index2 {
         Some(index) => index as i32,
         None => -1,
     };
