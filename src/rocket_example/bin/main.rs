@@ -41,14 +41,9 @@ fn query_name(name: String, salutation: Option<String>) -> String {
 
     // binsearch needs sorted array
     user.sort_unstable();
-    let index2: Option<usize> = match user.binary_search(&name) {
-        Ok(index) => Some(index),
-        Err(_) => None,
-    };
-
-    let index: i32 = match index2 {
-        Some(index) => index as i32,
-        None => -1,
+    let index: i32 = match user.binary_search(&name) {
+        Ok(index) => index as i32,
+        Err(_) => -1,
     };
 
     match salutation {
