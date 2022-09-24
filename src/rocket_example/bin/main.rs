@@ -6,11 +6,12 @@ use rocket::{
     get,
     http::{Cookie, CookieJar, Method},
     launch, post,
-    response::{content::Html, status::Created},
+    response::{content, status::Created},
     routes,
     serde::json::Json,
     uri, Build, Data, Request, Rocket, State,
 };
+//use rocket_contrib::json::Json;
 use serde::{Deserialize, Serialize};
 use std::str;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -27,6 +28,18 @@ fn hello_world() -> &'static str {
 #[get("/name/<name>")]
 fn hello_name(name: String) -> String {
     format!("Hello {}!", name)
+}
+
+#[derive(Deserialize)]
+struct MidiNote {
+    noteOnOff: String,
+    pitch: u8,
+    velocity: u8,
+}
+
+#[post("/midi", data = "<data>")]
+fn midi_note(data: String) -> String {
+    format!("got note {}!", data)
 }
 
 #[get("/search?<name>&<salutation>")]
