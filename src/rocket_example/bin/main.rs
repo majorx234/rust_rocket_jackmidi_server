@@ -32,7 +32,7 @@ fn hello_name(name: String) -> String {
 
 #[derive(Deserialize)]
 struct MidiNote {
-    noteOnOff: String,
+    note_on_off: String,
     pitch: u8,
     velocity: u8,
 }
