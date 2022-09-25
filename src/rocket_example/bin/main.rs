@@ -42,6 +42,11 @@ fn midi_note(data: String) -> String {
     format!("got note {}!", data)
 }
 
+#[post("/logout", data = "<data>")]
+fn logout(data: String) -> String {
+    format!("got note {}!", data)
+}
+
 #[get("/search?<name>&<salutation>")]
 fn query_name(name: String, salutation: Option<String>) -> String {
     let mut user: Vec<String> = vec![
@@ -69,5 +74,8 @@ fn query_name(name: String, salutation: Option<String>) -> String {
 #[launch]
 fn rocket() -> _ {
     // routes macro generates routes of webrequests
-    rocket::build().mount("/api", routes![hello_world, hello_name, query_name,])
+    rocket::build().mount(
+        "/api",
+        routes![hello_world, hello_name, query_name, midi_note, logout,],
+    )
 }
