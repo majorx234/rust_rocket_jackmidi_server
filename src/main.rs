@@ -14,28 +14,43 @@ use rocket::{
 //use rocket_contrib::json::Json;
 use serde::{Deserialize, Serialize};
 use serde_repr::*;
+use std::fmt;
 use std::str;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
-#[derive(Clone, Copy, Debug, Deserialize_repr)]
+#[derive(Clone, Copy, Debug, Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
 pub enum NoteType {
     NoteOn,
     NoteOff,
 }
 
-#[derive(Deserialize)]
+impl fmt::Display for NoteType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            NoteType::NoteOn => write!(f, "NoteOn"),
+            NoteType::NoteOff => write!(f, "NoteOff"),
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize)]
 struct MidiNote {
     note_type: NoteType,
     pitch: u8,
     velocity: u8,
 }
 
-#[post("/midi", data = "<data>")]
-fn midi_note(data: String) -> String {
-    format!("got note {}!", data)
+#[post("/midi", format = "json", data = "<data>")]
+fn midi_note(data: Json<MidiNote>) -> String {
+    let input: String = format!(
+        "MidiNote:{} {} {}",
+        data.note_type, data.pitch, data.velocity
+    );
+    println!("{}", input);
+    format!("got note {}!", input)
 }
 
 // async mainfunction
